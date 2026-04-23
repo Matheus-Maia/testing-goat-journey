@@ -20,14 +20,14 @@ class NewVisitorTest(unittest.TestCase):
         # Ele percebe que o título da página e o cabeçalho mencionam "To-Do".
         self.assertIn("To-Do", self.browser.title)
         header_text = self.browser.find_element(By.TAG_NAME, "h1").text
-        self.assertIn("To-do", header_text) 
+        self.assertIn("To-Do", header_text) 
 
         # ele é convidado a inserir um item na lista
-        inputbox = self.browser.find_elemnt(By.ID, "id_new_item")
+        inputbox = self.browser.find_element(By.ID, "id_new_item")
         self.assertEqual(inputbox.get_attribute("placeholder"), "Enter a to-do item")
 
         # ele digitta "Comprar um livro de python" na caixa de texto
-        inputbox.send_keys("c")
+        inputbox.send_keys("Comprar um livro de python")
 
         # quando ele aperta enter, a página é atualizada e agora a página lista "1: Comprar um livro de python" como um item em uma lista de tarefas
         inputbox.send_keys(Keys.ENTER)
@@ -35,7 +35,9 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element(By.ID, "id_list_table")
         rows = table.find_elements(By.TAG_NAME, "tr")
-        self.assertTrue(any(row.text == "1: Comprar um livro de pythom" for row in rows))
+        self.assertTrue(
+            any(row.text == "1: Comprar um livro de python" for row in rows), "New to-do item did not appear in table"
+        )
 
 
         # Continua aparecendo uma caixa de texto convidando-o a adicionar outro item. Ele digita "Comprar um livro de django"  
