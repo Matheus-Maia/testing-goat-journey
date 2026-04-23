@@ -1,5 +1,8 @@
-import unittest
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
+import unittest
 
 
 class NewVisitorTest(unittest.TestCase):
@@ -15,17 +18,29 @@ class NewVisitorTest(unittest.TestCase):
         self.browser.get("http://localhost:8000")
 
         # Ele percebe que o título da página e o cabeçalho mencionam "To-Do".
-        assert "To-Do" in self.browser.title
+        self.assertIn("To-Do", self.browser.title)
+        header_text = self.browser.find_element(By.TAG_NAME, "h1").text
+        self.assertIn("To-do", header_text) 
 
         # ele é convidado a inserir um item na lista
-        self.fail("Finish the test!")  
-
+        inputbox = self.browser.find_elemnt(By.ID, "id_new_item")
+        self.assertEqual(inputbox.get_attribute("placeholder"), "Enter a to-do item")
 
         # ele digitta "Comprar um livro de python" na caixa de texto
+        inputbox.send_keys("c")
 
         # quando ele aperta enter, a página é atualizada e agora a página lista "1: Comprar um livro de python" como um item em uma lista de tarefas
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        table = self.browser.find_element(By.ID, "id_list_table")
+        rows = table.find_elements(By.TAG_NAME, "tr")
+        self.assertTrue(any(row.text == "1: Comprar um livro de pythom" for row in rows))
+
 
         # Continua aparecendo uma caixa de texto convidando-o a adicionar outro item. Ele digita "Comprar um livro de django"  
+
+        self.fail("Finish the test")
 
         # a página é atualizada novamente, mostrando ambos os itens em sua lista.
 
